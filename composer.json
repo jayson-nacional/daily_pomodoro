@@ -1,0 +1,19 @@
+{
+    "name": "jayson-nacional/daily_pomodoro",
+    "description": "A Pomodoro-based app for daily productivity",
+    "type": "project",
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.75"
+    },
+    "autoload": {
+        "psr-4": {
+            "JaysonNacional\\DailyPomodoro\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jayson Nacional"
+        }
+    ],
+    "require": {}
+}
