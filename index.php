@@ -20,15 +20,25 @@ $password = $_ENV["PASSWORD"];
 
 try {
     $pdo = new PDO(dsn: $dsn, username: $username, password: $password);
+    // $stmt = $pdo->prepare("SELECT * FROM sandbox_table");
+    // $stmt->execute();
+
+    // $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+    // $result = $pdo->query("SELECT * FROM sandbox_table");
+    // foreach ($result as $key => $value) {
+    //     var_dump($value);
+    //     echo "</br>";
+    // }
+    //
     $stmt = $pdo->prepare("SELECT * FROM sandbox_table");
     $stmt->execute();
 
-    $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    foreach ($stmt->fetchAll() as $key => $value) {
-        var_dump($value);
+    foreach ($stmt as $row) {
+        echo "Item: " . $row["item"] . "</br>";
+        echo "Description: " . $row["description"] . "</br>";
         echo "</br>";
     }
-
 } catch (Exception $e) {
     echo $e->getMessage(), "</br>";
 }
