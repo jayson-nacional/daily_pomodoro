@@ -1,3 +1,34 @@
 <?php
-	echo "Welcome to the Daily Pomodoro App. Your partner for productivity!";
-?>
+
+include __DIR__ . "/vendor/autoload.php";
+
+use Dotenv\Dotenv;
+
+echo "Welcome to the Daily Pomodoro App. Your partner for productivity!</br>";
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+if ($_ENV["ENVIRONMENT"] == "Development") {
+    error_reporting(E_ALL);
+    ini_set("display_errors", "1");
+}
+
+$dsn = $_ENV["DSN"];
+$username = $_ENV["USER_NAME"];
+$password = $_ENV["PASSWORD"];
+
+try {
+    $pdo = new PDO(dsn: $dsn, username: $username, password: $password);
+    $stmt = $pdo->prepare("SELECT * FROM sandbox_table");
+    $stmt->execute();
+
+    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    foreach ($stmt->fetchAll() as $key => $value) {
+        var_dump($value);
+        echo "</br>";
+    }
+
+} catch (Exception $e) {
+    echo $e->getMessage(), "</br>";
+}
