@@ -474,3 +474,6 @@ composer.lock
 
 ### Environment Variables
 .env
+
+### Cache
+.php-cs-fixer.cache

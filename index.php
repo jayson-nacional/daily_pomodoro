@@ -3,6 +3,7 @@
 include __DIR__ . "/vendor/autoload.php";
 
 use Dotenv\Dotenv;
+use JaysonNacional\DailyPomodoro\classes\Todos;
 
 echo "Welcome to the Daily Pomodoro App. Your partner for productivity!</br>";
 
@@ -20,25 +21,11 @@ $password = $_ENV["PASSWORD"];
 
 try {
     $pdo = new PDO(dsn: $dsn, username: $username, password: $password);
-    // $stmt = $pdo->prepare("SELECT * FROM sandbox_table");
-    // $stmt->execute();
 
-    // $stmt->setFetchMode(PDO::FETCH_ASSOC);
-
-    // $result = $pdo->query("SELECT * FROM sandbox_table");
-    // foreach ($result as $key => $value) {
-    //     var_dump($value);
-    //     echo "</br>";
-    // }
-    //
-    $stmt = $pdo->prepare("SELECT * FROM sandbox_table");
-    $stmt->execute();
-
-    foreach ($stmt as $row) {
-        echo "Item: " . $row["item"] . "</br>";
-        echo "Description: " . $row["description"] . "</br>";
-        echo "</br>";
-    }
+    $todo = new Todos();
+    $todo->create();
+    $todo->update();
+    $todo->delete();
 } catch (Exception $e) {
     echo $e->getMessage(), "</br>";
 }
