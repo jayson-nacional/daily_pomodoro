@@ -7,10 +7,22 @@ use JaysonNacional\DailyPomodoro\interfaces\ICrudable;
 
 class Todos implements ICrudable
 {
-    public int $id;
-    public string $name;
-    public Date $date;
-    public int $sequenceNumber;
+    private int $id;
+    private string $name;
+    private Date $date;
+    private int $sequenceNumber;
+
+    public function __construct(
+        int $id,
+        string $name,
+        Date $date,
+        int $sequenceNumber
+    ) {
+        $this->$id = $id;
+        $this->$name = $name;
+        $this->$date = $date;
+        $this->$sequenceNumber = $sequenceNumber;
+    }
 
     public function create(): int
     {
