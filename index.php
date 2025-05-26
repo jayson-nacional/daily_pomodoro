@@ -11,42 +11,23 @@
 	<body>
 		<?php
 
-        use Dotenv\Dotenv;
+			use JaysonNacional\DailyPomodoro\classes\Database;
 
-		include __DIR__ . "/vendor/autoload.php";
+			include __DIR__ . "/vendor/autoload.php";
 
-		$dotnev = Dotenv::createImmutable(__DIR__);
-		$dotnev->load();
-
-		try {
-		    $pdo = new PDO(dsn: $_ENV["DSN"], username: $_ENV["USER_NAME"], password: $_ENV["PASSWORD"]);
-		    $query = $pdo->query("SELECT * FROM todos");
-		    $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-		    foreach ($result as $row) {
-		        echo $row['name'], "</br>";
-		    }
-
-		} catch (Exception $e) {
-		    echo $e->getMessage();
-		}
+			$pdo = Database::connect();
+			$query = $pdo->query("SELECT * FROM todos");
+			$result = $query->fetchAll(PDO::FETCH_ASSOC);
 		?>
 
-		<div class="card">
-			<div class="card-body">
-				Task 1
+		<?php foreach ($result as $row): ?>
+			<div class="card">
+				<div class="card-body">
+					<?= $row["name"] ?>
+				</div>
 			</div>
-		</div>
-		<div class="card">
-			<div class="card-body">
-				Task 2
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-body">
-				Task 3
-			</div>
-		</div>
+		<?php endforeach; ?>
+
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" 
 			integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" 
 			crossorigin="anonymous"></script>
