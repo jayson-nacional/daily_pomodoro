@@ -9,15 +9,34 @@
 			crossorigin="anonymous">
 	</head>
 	<body>
+		<form class="row g-2" method="POST">
+			<div class="col-auto">
+				<input name="task" type="text" class="form-control">
+			</div>
+			<div class="col-auto">
+				<button type="submit" name="submit" class="btn btn-primary mb-3">Add</button>
+			</div>
+		</form>
+
+
 		<?php
 
-			use JaysonNacional\DailyPomodoro\classes\Database;
+        use JaysonNacional\DailyPomodoro\classes\Database;
 
-			include __DIR__ . "/vendor/autoload.php";
+		include __DIR__ . "/vendor/autoload.php";
 
-			$pdo = Database::connect();
-			$query = $pdo->query("SELECT * FROM todos");
-			$result = $query->fetchAll(PDO::FETCH_ASSOC);
+		$pdo = Database::connect();
+		if (isset($_POST["submit"])) {
+		    if (isset($_POST["task"])) {
+		        $statement = $pdo->prepare("INSERT INTO todos(name, date, sequence_number) 
+					VALUES(?, current_timestamp, ?)");
+		        $result = $statement->execute([$_POST["task"], 5]);
+		    }
+		}
+
+		$query = $pdo->query("SELECT * FROM todos");
+		$result = $query->fetchAll(PDO::FETCH_ASSOC);
+
 		?>
 
 		<?php foreach ($result as $row): ?>
