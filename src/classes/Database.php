@@ -6,7 +6,7 @@ use Dotenv\Dotenv;
 use Exception;
 use PDO;
 
-include __DIR__ . "/vendor/autoload.php";
+include dirname(__DIR__, 2) . "/vendor/autoload.php";
 
 class Database
 {
