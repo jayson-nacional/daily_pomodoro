@@ -5,29 +5,29 @@ use JaysonNacional\DailyPomodoro\classes\Database;
 include dirname(__DIR__, 2) . "/vendor/autoload.php";
 
 if (isset($_GET["id"])) {
-    include __DIR__ . "/vendor/autoload.php";
     $pdo = Database::connect();
     $statement = $pdo->prepare("SELECT * FROM todos WHERE id = ?");
     $statement->execute([$_GET["id"]]);
 
     $result = $statement->fetch(PDO::FETCH_ASSOC);
-
-    if (isset($_GET["confirm"])) {
-        $confirm = $_GET["confirm"];
-
-        if ($confirm == 1) {
-            $statement = $pdo->prepare("DELETE FROM todos WHERE id = ?");
-            if ($statement->execute([$result["id"]])) {
-                header("Location: /dailypomodoro/src/todos/todos.php");
-                exit();
-            } else {
-                echo "<script>alert('Error has occured')</script>";
-            }
-        }
-    }
 } else {
     header("Location: /dailypomodoro/src/todos/todos.php");
     exit();
+}
+
+if (isset($_POST["save"])) {
+    if (isset($_POST["task"]) && !empty($_POST["task"])) {
+        $pdo = Database::connect();
+        $statement = $pdo->prepare("UPDATE todos SET name = ? WHERE id = ?");
+        if ($statement->execute([$_POST["task"], $result["id"]])) {
+			header("Location: /dailypomodoro/src/todos/todos.php");
+			exit();
+        } else {
+			echo "<script>alert('Error updating task.');</script>";
+        }
+    } else {
+        echo "<script>alert('Task cannot be empty.');</script>";
+    }
 }
 ?>
 
@@ -42,11 +42,15 @@ if (isset($_GET["id"])) {
 			crossorigin="anonymous">
 	</head>
 	<body>
-		<div class="alert alert-danger" role="alert">
-			Are you sure you want to delete <?= $result["name"] ?>?
-			<a href="todos.php" class="btn btn-secondary">No</a>
-			<a href="<?= "delete.php?id={$result["id"]}&confirm=1" ?>" class="btn btn-warning">Yes</a>
-		</div>
+		<form class="row g-2" method="POST">
+			<div class="col-auto">
+				<input name="task" type="text" class="form-control" value="<?= $result["name"] ?>">
+			</div>
+			<div class="col-auto">
+				<input type="submit" name="save" value="Save" class="btn btn-primary mb-3">
+				<a href="todos.php" class="btn btn-secondary mb-3">Cancel</a>
+			</div>
+		</form>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" 
 			integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" 

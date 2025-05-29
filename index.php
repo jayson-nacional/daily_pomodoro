@@ -8,8 +8,9 @@ $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 if ($_ENV["ENVIRONMENT"] == "Development") {
-	error_reporting(E_ALL);
-	ini_set("display_errors", "1");
+    error_reporting(E_ALL);
+    ini_set("display_errors", "1");
 }
 
-include __DIR__ . "/src/todos/todos.php";
+header("Location: /dailypomodoro/src/todos/todos.php");
+exit();

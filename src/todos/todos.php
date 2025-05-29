@@ -9,6 +9,7 @@
 			crossorigin="anonymous">
 	</head>
 	<body>
+		<a href="add.php" class="btn btn-primary">Add Task</a>
 		<?php
 
         include dirname(__DIR__, 2) . "/vendor/autoload.php";
@@ -21,7 +22,13 @@
 		?>
 
 		<?php foreach ($result as $row): ?>
-			<?= $row["name"], "</br>" ?>
+			<div class="card">
+				<div class="card-body">
+					<a href="<?php echo "edit.php?id={$row['id']}"; ?>" class="btn btn-success">Edit</a>
+					<a href="<?php echo "delete.php?id={$row['id']}"; ?>"  class="btn btn-danger">Delete</a>
+					<?= $row["name"] ?>	
+				</div>
+			</div>
 		<?php endforeach; ?>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" 
