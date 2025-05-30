@@ -5,7 +5,7 @@ if (isset($_POST["login"])) {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
-        if (empty($username) && empty($password)) {
+        if (empty($username) || empty($password)) {
             $errorMessage = "Username and password is required";
         }
     }
