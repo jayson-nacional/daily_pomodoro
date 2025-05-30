@@ -12,5 +12,6 @@ if ($_ENV["ENVIRONMENT"] == "Development") {
     ini_set("display_errors", "1");
 }
 
-header("Location: /dailypomodoro/src/todos/todos.php");
+// header("Location: /dailypomodoro/src/todos/todos.php");
+header("Location: /dailypomodoro/login.php");
 exit();
