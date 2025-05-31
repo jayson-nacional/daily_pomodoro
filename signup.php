@@ -29,8 +29,10 @@ if (isset($_POST["submit"])) {
                         } elseif ($_POST["password1"] != $_POST["password2"]) {
                             $errorMessages[] = "Password mismatch.";
                         } else {
-							// Everything is valid. Insert account in database
-							echo "Everything is valid. Insert account in database.";
+                            $statement = $pdo->prepare("INSERT INTO accounts(username, password) VALUES(?, ?);");
+                            $statement->execute([$_POST["username"], $_POST["password1"]]);
+
+                            $statement->fetch(PDO::FETCH_ASSOC);
                         }
                     }
                 }
@@ -38,8 +40,6 @@ if (isset($_POST["submit"])) {
         }
     }
 }
-
-var_dump($errorMessages);
 
 ?>
 <!doctype html>
