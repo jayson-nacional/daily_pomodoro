@@ -1,5 +1,9 @@
 <?php
 
+use JaysonNacional\DailyPomodoro\classes\Database;
+
+include dirname(__DIR__) . "/daily_pomodoro/vendor/autoload.php";
+
 if (isset($_POST["login"])) {
     if (isset($_POST["username"]) && isset($_POST["password"])) {
         $username = $_POST["username"];
@@ -7,6 +11,21 @@ if (isset($_POST["login"])) {
 
         if (empty($username) || empty($password)) {
             $errorMessage = "Username and password is required";
+        } else {
+            $pdo = Database::connect();
+            $statement = $pdo->prepare("SELECT * FROM accounts WHERE username = ?");
+            $statement->execute([$username]);
+
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            if ($result) { // user exists
+                if (password_verify($password, $result["password"])) {
+                    echo "Successfully logged in";
+                } else {
+					echo "Incorrect password";
+                }
+            } else {
+                echo "User does not exist";
+            }
         }
     }
 }

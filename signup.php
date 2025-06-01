@@ -29,8 +29,10 @@ if (isset($_POST["submit"])) {
                         } elseif ($_POST["password1"] != $_POST["password2"]) {
                             $errorMessages[] = "Password mismatch.";
                         } else {
+							$hashedPassword = password_hash($_POST["password1"], PASSWORD_BCRYPT);
+
                             $statement = $pdo->prepare("INSERT INTO accounts(username, password) VALUES(?, ?);");
-                            $statement->execute([$_POST["username"], $_POST["password1"]]);
+                            $statement->execute([$_POST["username"], $hashedPassword]);
 
                             $statement->fetch(PDO::FETCH_ASSOC);
                         }
