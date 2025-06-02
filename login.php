@@ -1,8 +1,18 @@
 <?php
 
+
+use Dotenv\Dotenv;
 use JaysonNacional\DailyPomodoro\classes\Database;
 
 include dirname(__DIR__) . "/daily_pomodoro/vendor/autoload.php";
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+function base64URLEncode(string $text): string
+{
+    return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
+}
 
 if (isset($_POST["login"])) {
     if (isset($_POST["username"]) && isset($_POST["password"])) {
@@ -19,9 +29,23 @@ if (isset($_POST["login"])) {
             $result = $statement->fetch(PDO::FETCH_ASSOC);
             if ($result) { // user exists
                 if (password_verify($password, $result["password"])) {
-                    echo "Successfully logged in";
+                    $header = json_encode([
+                        "alg" => "HS256",
+                        "typ" => "JWT"
+                    ]);
+                    $header = base64URLEncode($header);
+
+                    $payload = json_encode([
+                        "name" => $result["username"]
+                    ]);
+                    $payload = base64URLEncode($payload);
+
+                    $signature = hash_hmac("sha256", "{$header}.{$payload}", $_ENV["SECRET"], true);
+                    $signature = base64URLEncode($signature);
+
+                    echo "{$header}.{$payload}.{$signature}";
                 } else {
-					echo "Incorrect password";
+                    echo "Incorrect password";
                 }
             } else {
                 echo "User does not exist";
