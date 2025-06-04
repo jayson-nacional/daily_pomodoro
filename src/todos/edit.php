@@ -1,8 +1,38 @@
 <?php
 
+use Dotenv\Dotenv;
 use JaysonNacional\DailyPomodoro\classes\Database;
 
 include dirname(__DIR__, 2) . "/vendor/autoload.php";
+
+function base64URLEncode(string $text): string
+{
+    return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
+}
+
+$dotenv = Dotenv::createImmutable(dirname(__DIR__, 2));
+$dotenv->load();
+
+if (isset($_COOKIE["TestJwt"])) {
+    $jwt = $_COOKIE["TestJwt"];
+    $exploded = explode(".", $jwt);
+
+    if ($exploded) {
+        $header = $exploded[0];
+        $payload = $exploded[1];
+        $jwtSignature = $exploded[2];
+        $validatorSignature = hash_hmac("sha256", "{$header}.{$payload}", $_ENV["SECRET"], true);
+
+        if (hash_equals($jwtSignature, base64URLEncode($validatorSignature))) {
+            setcookie("TestJwt", "{$header}.{$payload}.{$jwtSignature}");
+
+        } else {
+            header("Location: /dailypomodoro/login.php");
+        }
+    }
+} else {
+    header("Location: /dailypomodoro/login.php");
+}
 
 if (isset($_GET["id"])) {
     $pdo = Database::connect();
@@ -20,10 +50,10 @@ if (isset($_POST["save"])) {
         $pdo = Database::connect();
         $statement = $pdo->prepare("UPDATE todos SET name = ? WHERE id = ?");
         if ($statement->execute([$_POST["task"], $result["id"]])) {
-			header("Location: /dailypomodoro/src/todos/todos.php");
-			exit();
+            header("Location: /dailypomodoro/src/todos/todos.php");
+            exit();
         } else {
-			echo "<script>alert('Error updating task.');</script>";
+            echo "<script>alert('Error updating task.');</script>";
         }
     } else {
         echo "<script>alert('Task cannot be empty.');</script>";

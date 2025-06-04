@@ -1,6 +1,5 @@
 <?php
 
-
 use Dotenv\Dotenv;
 use JaysonNacional\DailyPomodoro\classes\Database;
 
@@ -43,7 +42,11 @@ if (isset($_POST["login"])) {
                     $signature = hash_hmac("sha256", "{$header}.{$payload}", $_ENV["SECRET"], true);
                     $signature = base64URLEncode($signature);
 
-                    echo "{$header}.{$payload}.{$signature}";
+                    $jwt = "{$header}.{$payload}.{$signature}";
+                    setcookie("TestJwt", $jwt);
+
+                    header("Location: /dailypomodoro/src/todos/todos.php");
+                    exit();
                 } else {
                     echo "Incorrect password";
                 }
