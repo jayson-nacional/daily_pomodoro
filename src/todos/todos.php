@@ -10,6 +10,11 @@ function base64URLEncode(string $text): string
     return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
 }
 
+if (isset($_GET["logout"]) && $_GET["logout"]) {
+    header("Location: /dailypomodoro/logout.php");
+    exit();
+}
+
 $dotenv = Dotenv::createImmutable(dirname(__DIR__, 2));
 $dotenv->load();
 
@@ -24,14 +29,15 @@ if (isset($_COOKIE["TestJwt"])) {
         $validatorSignature = hash_hmac("sha256", "{$header}.{$payload}", $_ENV["SECRET"], true);
 
         if (hash_equals($jwtSignature, base64URLEncode($validatorSignature))) {
-            setcookie("TestJwt", "{$header}.{$payload}.{$jwtSignature}");
-
+            ; // valid jwt
         } else {
             header("Location: /dailypomodoro/login.php");
+            exit();
         }
     }
 } else {
     header("Location: /dailypomodoro/login.php");
+    exit();
 }
 
 $pdo = Database::connect();
@@ -52,6 +58,7 @@ $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 	</head>
 	<body>
 		<a href="add.php" class="btn btn-primary">Add Task</a>
+		<a href="todos.php?logout=1" class="btn btn-secondary">Logout</a>
 
 		<?php foreach ($result as $row): ?>
 			<div class="card">
