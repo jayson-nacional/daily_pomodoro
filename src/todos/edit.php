@@ -14,6 +14,8 @@ $dotenv = Dotenv::createImmutable(dirname(__DIR__, 2));
 $dotenv->load();
 
 if (isset($_COOKIE["TestJwt"])) {
+    echo "Test cookie is set";
+
     $jwt = $_COOKIE["TestJwt"];
     $exploded = explode(".", $jwt);
 
@@ -24,14 +26,16 @@ if (isset($_COOKIE["TestJwt"])) {
         $validatorSignature = hash_hmac("sha256", "{$header}.{$payload}", $_ENV["SECRET"], true);
 
         if (hash_equals($jwtSignature, base64URLEncode($validatorSignature))) {
-            setcookie("TestJwt", "{$header}.{$payload}.{$jwtSignature}");
-
+            echo "Has a valid signature";
+            ; // valid jwt
         } else {
             header("Location: /dailypomodoro/login.php");
+            exit();
         }
     }
 } else {
     header("Location: /dailypomodoro/login.php");
+    exit();
 }
 
 if (isset($_GET["id"])) {

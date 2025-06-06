@@ -7,3 +7,8 @@
 - Create a class that will represent the todo table
 - Implement the crud operations
 - Research on making the sqls commands work in neovim
+
+
+# Current challenge  
+
+- After logging out, edit page seems still to work and obtain a token on cookie (should not be the case, origin of cookie is unclear)
