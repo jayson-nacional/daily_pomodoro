@@ -2,7 +2,9 @@
 
 use JaysonNacional\DailyPomodoro\classes\Database;
 
-include dirname(__DIR__, 2) . "/vendor/autoload.php";
+// Auth
+include dirname(__DIR__, 1) . "/includes/auth.php";
+// End of Auth flow
 
 if (isset($_POST["submit"])) {
     if (isset($_POST["task"]) && !empty($_POST["task"])) {
@@ -10,10 +12,10 @@ if (isset($_POST["submit"])) {
         $statement = $pdo->prepare("INSERT INTO todos(name, date, sequence_number)
 								   VALUES(?, current_timestamp, 1)");
         if ($statement->execute([$_POST["task"]])) {
-			header("Location: /dailypomodoro/src/todos/todos.php");
-			exit();
+            header("Location: /dailypomodoro/src/todos/todos.php");
+            exit();
         } else {
-			echo "<script>alert('Error saving task.');</script>";
+            echo "<script>alert('Error saving task.');</script>";
         }
     } else {
         echo "<script>alert('Task cannot be empty.');</script>";
